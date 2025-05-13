@@ -1,10 +1,24 @@
 package io.github.kitrinaludex.inventory_manager.model;
 
 public class InventoryEntry {
-    private long id;
+    private final long  id;
     private String name;
     private int quantity;
 
+    public InventoryEntry(long id, String name, int quantity) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public long getId() {
         return id;

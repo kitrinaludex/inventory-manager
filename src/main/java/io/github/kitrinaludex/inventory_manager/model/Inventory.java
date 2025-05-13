@@ -4,5 +4,21 @@ import java.util.List;
 
 public class Inventory {
     private long id;
-    private List<InventoryEntry> entries;
+    private long userId;
+    private String name;
+
+    public Inventory(long id, long userId, String name) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getId() {
+        return id;
+    }
 }
