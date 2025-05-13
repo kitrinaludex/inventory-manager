@@ -1,6 +1,6 @@
 package io.github.kitrinaludex.inventory_manager.dto;
 
-public class InventoryEntryDto {
+public class    InventoryEntryDto {
     private long id;
     private String name;
     private Integer quantity;

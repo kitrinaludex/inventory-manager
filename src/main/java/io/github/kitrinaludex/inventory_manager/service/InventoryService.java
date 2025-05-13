@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class InventoryService {
 
-    public List<InventoryEntryDto> allRecords() {
+    public List<InventoryEntryDto> allEntries() {
         return Arrays.asList(
                 new InventoryEntryDto(1,"ball",5),
                 new InventoryEntryDto(2,"stick",3),
