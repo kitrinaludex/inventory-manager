@@ -18,7 +18,7 @@ public class InventoryRepository {
 
     public void add() {
 
-        jdbcTemplate.execute("INSERT INTO test VALUES(111)");
+        jdbcTemplate.execute("INSERT INTO test VALUES(420)");
     }
 
 }
