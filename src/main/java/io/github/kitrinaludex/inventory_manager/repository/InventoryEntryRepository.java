@@ -4,15 +4,13 @@ package io.github.kitrinaludex.inventory_manager.repository;
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.InventoryEntry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class InventoryRepository {
+public class InventoryEntryRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -55,5 +53,10 @@ public class InventoryRepository {
 
     public void deleteItem(long id) {
         jdbcTemplate.update("DELETE FROM items WHERE id = ?",id);
+    }
+
+    public void updateEntry(long id, InventoryEntry inventoryEntry) {
+        jdbcTemplate.update("UPDATE items SET name = ?, quantity = ? WHERE id = ?",
+                inventoryEntry.getName(),inventoryEntry.getQuantity(),id);
     }
 }
