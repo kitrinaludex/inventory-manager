@@ -13,24 +13,23 @@ import java.util.List;
 @RestController
 public class inventoryController {
 
-    public final InventoryService inventoryEntryService;
+    public final InventoryService inventoryService;
     @Autowired
-    private InventoryItemRepository inventoryItemRepository;
 
-    public inventoryController(InventoryService inventoryEntryService) {
-        this.inventoryEntryService = inventoryEntryService;
+    public inventoryController(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
     }
 
 
     @GetMapping("/inventory/{id}")
     public ResponseEntity<List<Item>> getItems(@PathVariable long id) {
-        return ResponseEntity.ok(inventoryEntryService.allItems(id));
+        return ResponseEntity.ok(inventoryService.allItems(id));
     }
 
     @PostMapping("/inventory/{id}")
     public ResponseEntity<Item> createEntry(@PathVariable long id,
                                             @RequestBody Item item) {
-        inventoryEntryService.createItem(id, item);
+        inventoryService.createItem(id, item);
         return ResponseEntity.created(URI.create("/inventory/item/" + id)).body(item);
     }
 
@@ -38,13 +37,13 @@ public class inventoryController {
     public ResponseEntity<Void> updateItem(@PathVariable long id,
                                                @PathVariable long itemid,
                                                @RequestBody Item item){
-        inventoryEntryService.updateItem(itemid, item);
+        inventoryService.updateItem(itemid, item);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/inventory/{id}/item/{itemid}")
     public  ResponseEntity<Void> deleteItem(@PathVariable("itemid") long id){
-        inventoryEntryService.deleteItem(id);
+        inventoryService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
 
