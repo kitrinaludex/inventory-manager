@@ -2,8 +2,10 @@ package io.github.kitrinaludex.inventory_manager.controller;
 
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.Item;
+import io.github.kitrinaludex.inventory_manager.model.User;
 import io.github.kitrinaludex.inventory_manager.repository.InventoryItemRepository;
 import io.github.kitrinaludex.inventory_manager.service.InventoryService;
+import io.github.kitrinaludex.inventory_manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,12 @@ import java.util.List;
 public class inventoryController {
 
     public final InventoryService inventoryService;
-    @Autowired
+    private final UserService userService;
 
-    public inventoryController(InventoryService inventoryService) {
+    @Autowired
+    public inventoryController(InventoryService inventoryService,UserService userService) {
         this.inventoryService = inventoryService;
+        this.userService = userService;
     }
 
 
@@ -27,7 +31,10 @@ public class inventoryController {
     inventoryService.createInventory(inventory.getName(),inventory.getUserId());
         return ResponseEntity.noContent().build();
     }
-
+     @GetMapping("/user/{id}")
+     public ResponseEntity<User> getUser(@PathVariable long id) {
+        return ResponseEntity.ok(userService.getUser(id));
+     }
 
     @GetMapping("/inventory/{id}")
     public ResponseEntity<List<Item>> getItems(@PathVariable long id) {
