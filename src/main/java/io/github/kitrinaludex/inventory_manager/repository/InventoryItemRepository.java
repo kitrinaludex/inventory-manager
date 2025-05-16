@@ -2,7 +2,7 @@ package io.github.kitrinaludex.inventory_manager.repository;
 
 
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
-import io.github.kitrinaludex.inventory_manager.model.InventoryEntry;
+import io.github.kitrinaludex.inventory_manager.model.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class InventoryEntryRepository {
+public class InventoryItemRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -21,33 +21,30 @@ public class InventoryEntryRepository {
         return jdbcTemplate.queryForObject(sql,new InventoryMapper(),id);
     }
 
-    public List<InventoryEntry> getInventoryContent(long id) {
+    public List<Item> getInventoryContent(long id) {
         String sql = "SELECT * FROM items WHERE inventory_id = ?";
-        return jdbcTemplate.query(sql,new InventoryEntryMapper(),id);
+        return jdbcTemplate.query(sql,new ItemMapper(),id);
     }
 
-    public InventoryEntry getEntryById(long id) {
+    public Item getItemById(long id) {
         String sql = "SELECT * FROM items WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,new InventoryEntryMapper(),id);
-    }
-    public void add(Inventory inventory) {
-        jdbcTemplate.update("INSERT INTO inventories VALUES(?)",inventory.getName());
+        return jdbcTemplate.queryForObject(sql,new ItemMapper(),id);
     }
 
-    public void updateEntryName(long id,String name) {
+    public void updateItemName(long id,String name) {
         jdbcTemplate.update("UPDATE items SET name = ? WHERE id = ?",name,id);
     }
 
-    public void updateEntryQuantity(long id, int quantity) {
+    public void updateItemQuantity(long id, int quantity) {
         jdbcTemplate.update("UPDATE items SET quantity = ? WHERE id = ?",quantity,id);
     }
 
 
-    public void createInventoryEntry(long id, InventoryEntry inventoryEntry) {
+    public void createItem(long id, Item item) {
         jdbcTemplate.update("INSERT INTO items(inventory_id,name,quantity) VALUES(?,?,?)",
                 id,
-                inventoryEntry.getName(),
-                inventoryEntry.getQuantity());
+                item.getName(),
+                item.getQuantity());
     }
 
 
@@ -55,8 +52,8 @@ public class InventoryEntryRepository {
         jdbcTemplate.update("DELETE FROM items WHERE id = ?",id);
     }
 
-    public void updateEntry(long id, InventoryEntry inventoryEntry) {
+    public void updateItem(long id, Item item) {
         jdbcTemplate.update("UPDATE items SET name = ?, quantity = ? WHERE id = ?",
-                inventoryEntry.getName(),inventoryEntry.getQuantity(),id);
+                item.getName(), item.getQuantity(),id);
     }
 }

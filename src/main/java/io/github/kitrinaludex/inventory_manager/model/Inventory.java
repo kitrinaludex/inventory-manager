@@ -6,6 +6,15 @@ public class Inventory {
     private long id;
     private long userId;
     private String name;
+    private int itemQuantity;
+
+    public int getItemQuantity() {
+        return itemQuantity;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
 
     public Inventory(long id, long userId, String name) {
         this.id = id;

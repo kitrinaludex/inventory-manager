@@ -1,8 +1,8 @@
 package io.github.kitrinaludex.inventory_manager.controller;
 
-import io.github.kitrinaludex.inventory_manager.model.InventoryEntry;
-import io.github.kitrinaludex.inventory_manager.repository.InventoryEntryRepository;
-import io.github.kitrinaludex.inventory_manager.service.InventoryEntryService;
+import io.github.kitrinaludex.inventory_manager.model.Item;
+import io.github.kitrinaludex.inventory_manager.repository.InventoryItemRepository;
+import io.github.kitrinaludex.inventory_manager.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,32 +13,32 @@ import java.util.List;
 @RestController
 public class inventoryController {
 
-    public final InventoryEntryService inventoryEntryService;
+    public final InventoryService inventoryEntryService;
     @Autowired
-    private InventoryEntryRepository inventoryEntryRepository;
+    private InventoryItemRepository inventoryItemRepository;
 
-    public inventoryController(InventoryEntryService inventoryEntryService) {
+    public inventoryController(InventoryService inventoryEntryService) {
         this.inventoryEntryService = inventoryEntryService;
     }
 
 
     @GetMapping("/inventory/{id}")
-    public ResponseEntity<List<InventoryEntry>> getInventoryEntries(@PathVariable long id) {
-        return ResponseEntity.ok(inventoryEntryService.allEntries(id));
+    public ResponseEntity<List<Item>> getItems(@PathVariable long id) {
+        return ResponseEntity.ok(inventoryEntryService.allItems(id));
     }
 
     @PostMapping("/inventory/{id}")
-    public ResponseEntity<InventoryEntry> createEntry(@PathVariable long id,
-                                                      @RequestBody InventoryEntry inventoryEntry) {
-        inventoryEntryService.createInventoryEntry(id,inventoryEntry);
-        return ResponseEntity.created(URI.create("/inventory/item/" + id)).body(inventoryEntry);
+    public ResponseEntity<Item> createEntry(@PathVariable long id,
+                                            @RequestBody Item item) {
+        inventoryEntryService.createItem(id, item);
+        return ResponseEntity.created(URI.create("/inventory/item/" + id)).body(item);
     }
 
     @PutMapping("/inventory/{id}/item/{itemid}")
     public ResponseEntity<Void> updateItem(@PathVariable long id,
                                                @PathVariable long itemid,
-                                               @RequestBody InventoryEntry inventoryEntry){
-        inventoryEntryService.updateEntry(itemid,inventoryEntry);
+                                               @RequestBody Item item){
+        inventoryEntryService.updateItem(itemid, item);
         return ResponseEntity.noContent().build();
     }
 
