@@ -1,5 +1,6 @@
 package io.github.kitrinaludex.inventory_manager.controller;
 
+import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.Item;
 import io.github.kitrinaludex.inventory_manager.repository.InventoryItemRepository;
 import io.github.kitrinaludex.inventory_manager.service.InventoryService;
@@ -18,6 +19,13 @@ public class inventoryController {
 
     public inventoryController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
+    }
+
+
+    @PutMapping("/inventory")
+    public ResponseEntity<Void> createInventory(@RequestBody Inventory inventory) {
+    inventoryService.createInventory(inventory.getName(),inventory.getUserId());
+        return ResponseEntity.noContent().build();
     }
 
 
