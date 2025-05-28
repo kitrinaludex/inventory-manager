@@ -12,12 +12,17 @@ public class UserRepository {
     JdbcTemplate jdbcTemplate;
 
     public User getUser(long id) {
-        String sql = "Select * FROM users WHERE id = ?";
+        String sql = "SELECT * FROM users WHERE id = ?";
        return jdbcTemplate.queryForObject(sql,new UserMapper(),id);
     }
 
     public User getUserByUsername(String username) {
-        String sql = "Select * FROM users WHERE user_name = ?";
+        String sql = "SELECT * FROM users WHERE user_name = ?";
         return jdbcTemplate.queryForObject(sql,new UserMapper(),username);
+    }
+
+    public void addUser(User user) {
+        String sql = "INSERT INTO USERS(user_name,password) VALUES(?,?)";
+        jdbcTemplate.update(sql,user.getUsername(),user.getPassword());
     }
 }

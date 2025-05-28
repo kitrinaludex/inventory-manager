@@ -15,15 +15,32 @@ import java.util.List;
 
 @RestController
 public class inventoryController {
-    @Autowired
+
     private final InventoryService inventoryService;
-    @Autowired
     private final UserService userService;
 
-    public inventoryController(InventoryService inventoryService, UserService userService) {
+    @Autowired
+    public inventoryController(InventoryService inventoryService,UserService userService) {
         this.inventoryService = inventoryService;
         this.userService = userService;
     }
+
+
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody User user){
+        userService.addUser(user);
+        return ResponseEntity.ok("cool");
+    }
+
+    @GetMapping("/loggedin")
+    public String loggedin() {
+        String userName = SecurityContextHolder
+                .getContext()
+                .getAuthentication().getName();
+        return userName + "is logged in";
+    }
+
 
 
     @PutMapping("/inventory")
@@ -37,8 +54,8 @@ public class inventoryController {
      }
 
     @GetMapping("/inventory/{id}")
-    public ResponseEntity<Inventory> getItems(@PathVariable long id) {
-        return ResponseEntity.ok(inventoryService.getInventory(id));
+    public ResponseEntity<List<Item>> getItems(@PathVariable long id) {
+        return ResponseEntity.ok(inventoryService.allItems(id));
     }
 
     @PostMapping("/inventory/{id}")
