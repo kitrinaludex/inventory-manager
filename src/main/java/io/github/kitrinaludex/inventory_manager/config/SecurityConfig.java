@@ -19,8 +19,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(Customizer.withDefaults());
          http.authorizeHttpRequests(auth -> auth
-                         .requestMatchers("/register").permitAll()
-                         .requestMatchers("/inventory/*").authenticated()
+                         .anyRequest().permitAll()
                         );
 
 

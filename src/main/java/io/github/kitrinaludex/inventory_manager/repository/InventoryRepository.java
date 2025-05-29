@@ -3,7 +3,15 @@ package io.github.kitrinaludex.inventory_manager.repository;
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 @Repository
 public class InventoryRepository {
@@ -12,8 +20,22 @@ public class InventoryRepository {
     JdbcTemplate jdbcTemplate;
 
     public void createInventory(String name,long userId) {
-        jdbcTemplate.update("INSERT INTO inventories(name,user_id) VALUES(?,?)",
-                name,userId);
+
+        KeyHolder key = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                String query = "INSERT INTO inventories(name,user_id) VALUES(?,?)";
+                PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+                ps.setString(1, name);
+                ps.setLong(2, userId);
+                return ps;
+            }
+        }, key); //creates an inventory and adds its id to keyHolder
+
+        jdbcTemplate.update("INSERT INTO inventory_authorities(user_id,inventory_id," +
+                        "authority_level) VALUES(?,?,3)",
+                userId,key.getKey().longValue());
     }
 
     public Inventory getInventory(long id) {

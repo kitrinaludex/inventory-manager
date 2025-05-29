@@ -36,6 +36,7 @@ public class InventoryService {
 
     public void createInventory(String name,long userId) {
         inventoryRepository.createInventory(name,userId);
+
     }
 
     public Inventory getInventory(long id) {

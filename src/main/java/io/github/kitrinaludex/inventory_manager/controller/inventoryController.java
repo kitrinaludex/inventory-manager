@@ -43,7 +43,7 @@ public class inventoryController {
 
 
 
-    @PutMapping("/inventory")
+    @PostMapping("/inventory")
     public ResponseEntity<Void> createInventory(@RequestBody Inventory inventory) {
     inventoryService.createInventory(inventory.getName(),inventory.getUserId());
         return ResponseEntity.noContent().build();
