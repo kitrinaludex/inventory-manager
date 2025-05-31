@@ -1,5 +1,6 @@
 package io.github.kitrinaludex.inventory_manager.service;
 
+import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.Item;
 import io.github.kitrinaludex.inventory_manager.repository.InventoryItemRepository;
 import io.github.kitrinaludex.inventory_manager.repository.InventoryRepository;
@@ -35,5 +36,9 @@ public class InventoryService {
 
     public void createInventory(String name,long userId) {
         inventoryRepository.createInventory(name,userId);
+    }
+
+    public Inventory getInventory(long id) {
+        return inventoryRepository.getInventory(id);
     }
 }

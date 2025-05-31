@@ -2,7 +2,8 @@ DROP TABLE IF EXISTS test,users,items,inventories;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
-    name TEXT);
+    user_name TEXT,
+    password TEXT);
 
 CREATE TABLE items(
 id SERIAL PRIMARY KEY,

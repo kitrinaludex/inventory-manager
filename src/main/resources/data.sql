@@ -1,4 +1,4 @@
-INSERT INTO users(name) VALUES('test');
+INSERT INTO users(user_name,password) VALUES('john','12345');
 
 INSERT INTO inventories(user_id,name) VALUES (1,'testInventory');
 

@@ -15,4 +15,9 @@ public class UserRepository {
         String sql = "Select * FROM users WHERE id = ?";
        return jdbcTemplate.queryForObject(sql,new UserMapper(),id);
     }
+
+    public User getUserByUsername(String username) {
+        String sql = "Select * FROM users WHERE user_name = ?";
+        return jdbcTemplate.queryForObject(sql,new UserMapper(),username);
+    }
 }

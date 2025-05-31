@@ -6,21 +6,25 @@ public class Inventory {
     private long id;
     private long userId;
     private String name;
-    private int itemQuantity;
-
-    public int getItemQuantity() {
-        return itemQuantity;
-    }
+    private List<Item> items;
 
     public long getUserId() {
         return userId;
     }
 
-    public Inventory(long id, long userId, String name) {
-        this.id = id;
-        this.userId = userId;
-        this.name = name;
+    public List<Item> getItems() {
+        return items;
+    }
 
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public Inventory(long id , String name, long userId, List<Item> items) {
+        this.id = id;
+        this.name = name;
+        this.userId = userId;
+        this.items = items;
     }
 
     public String getName() {

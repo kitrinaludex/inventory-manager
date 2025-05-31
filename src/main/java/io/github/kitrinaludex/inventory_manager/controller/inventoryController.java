@@ -3,11 +3,11 @@ package io.github.kitrinaludex.inventory_manager.controller;
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.Item;
 import io.github.kitrinaludex.inventory_manager.model.User;
-import io.github.kitrinaludex.inventory_manager.repository.InventoryItemRepository;
 import io.github.kitrinaludex.inventory_manager.service.InventoryService;
 import io.github.kitrinaludex.inventory_manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @RestController
 public class inventoryController {
-
-    public final InventoryService inventoryService;
+    @Autowired
+    private final InventoryService inventoryService;
+    @Autowired
     private final UserService userService;
 
-    @Autowired
-    public inventoryController(InventoryService inventoryService,UserService userService) {
+    public inventoryController(InventoryService inventoryService, UserService userService) {
         this.inventoryService = inventoryService;
         this.userService = userService;
     }
@@ -37,8 +37,8 @@ public class inventoryController {
      }
 
     @GetMapping("/inventory/{id}")
-    public ResponseEntity<List<Item>> getItems(@PathVariable long id) {
-        return ResponseEntity.ok(inventoryService.allItems(id));
+    public ResponseEntity<Inventory> getItems(@PathVariable long id) {
+        return ResponseEntity.ok(inventoryService.getInventory(id));
     }
 
     @PostMapping("/inventory/{id}")

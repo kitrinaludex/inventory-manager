@@ -2,18 +2,24 @@ package io.github.kitrinaludex.inventory_manager.model;
 
 public class User {
     private long id;
-    private String userName;
+    private String username;
+    private String password;
 
-    public User(long id, String userName) {
+    public User(long id, String username,String password) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
+        this.password = password;
     }
 
     public long getId() {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword(){
+        return password;
     }
 }
