@@ -27,12 +27,12 @@ public class inventoryController {
     private final InventoryService inventoryService;
     private final UserService userService;
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<User> getUser(@PathVariable long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
-    @GetMapping("/inventory/{id}")
+    @GetMapping("/inventories/{id}")
     public ResponseEntity<?> getItems(@PathVariable long id) {
         return ResponseEntity.ok(inventoryService.getInventory(id));
     }
@@ -61,7 +61,7 @@ public class inventoryController {
         return ResponseEntity.ok("cool");
     }
 
-    @PostMapping("/inventory")
+    @PostMapping("/inventories")
     public ResponseEntity<Void> createInventory(@RequestBody Inventory inventory) {
         SecurityUser user = (SecurityUser) SecurityContextHolder
                 .getContext()
@@ -71,14 +71,14 @@ public class inventoryController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/inventory/{id}")
+    @PostMapping("/inventories/{id}")
     public ResponseEntity<Item> createEntry(@PathVariable long id,
                                             @RequestBody Item item) {
         inventoryService.createItem(id, item);
         return ResponseEntity.created(URI.create("/inventory/item/" + id)).body(item);
     }
 
-    @PutMapping("/inventory/{id}/item/{itemid}")
+    @PutMapping("/inventories/{id}/items/{itemid}")
     public ResponseEntity<Void> updateItem(@PathVariable long id,
                                                @PathVariable long itemid,
                                                @RequestBody Item item){
@@ -86,7 +86,7 @@ public class inventoryController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/inventory/{id}/item/{itemid}")
+    @DeleteMapping("/inventories/{id}/items/{itemid}")
     public  ResponseEntity<Void> deleteItem(@PathVariable("itemid") long id){
         inventoryService.deleteItem(id);
         return ResponseEntity.noContent().build();
