@@ -22,7 +22,7 @@ public class InventoryRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public void createInventory(String name,long userId) {
+    public long createInventory(String name,long userId) {
 
         KeyHolder key = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -39,6 +39,7 @@ public class InventoryRepository {
         jdbcTemplate.update("INSERT INTO inventory_authorities(user_id,inventory_id," +
                         "authority_level) VALUES(?,?,3)",
                 userId,key.getKey().longValue());
+        return key.getKey().longValue();
     }
 
     public Inventory getInventory(long id) {

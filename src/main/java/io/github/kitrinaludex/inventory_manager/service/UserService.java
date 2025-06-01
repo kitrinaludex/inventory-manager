@@ -14,7 +14,7 @@ public class UserService {
        return userRepository.getUser(id);
     }
 
-    public void addUser(User user) {
-        userRepository.addUser(user);
+    public long addUser(User user) {
+        return userRepository.addUser(user);
     }
 }

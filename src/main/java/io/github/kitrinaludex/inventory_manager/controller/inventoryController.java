@@ -56,26 +56,31 @@ public class inventoryController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user){
-        userService.addUser(user);
-        return ResponseEntity.ok("cool");
+    public ResponseEntity<?> register(@RequestBody User user){
+        Long newUserId = userService.addUser(user);
+        return ResponseEntity.created(URI.create("users/" + newUserId)).build();
     }
 
     @PostMapping("/inventories")
-    public ResponseEntity<Void> createInventory(@RequestBody Inventory inventory) {
+    public ResponseEntity<?> createInventory(@RequestBody Inventory inventory) {
         SecurityUser user = (SecurityUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication().getPrincipal();
 
-        inventoryService.createInventory(inventory.getName(),user.getId());
-        return ResponseEntity.noContent().build();
+        Long newInventoryId = inventoryService.createInventory(inventory.
+                getName(),user.getId());
+
+        return ResponseEntity.created(URI.create("inventories/" + newInventoryId)).build();
     }
 
     @PostMapping("/inventories/{id}")
-    public ResponseEntity<Item> createEntry(@PathVariable long id,
+    public ResponseEntity<Long> createEntry(@PathVariable long id,
                                             @RequestBody Item item) {
-        inventoryService.createItem(id, item);
-        return ResponseEntity.created(URI.create("/inventory/item/" + id)).body(item);
+
+        Long newItemId = inventoryService.createItem(id, item);
+        return ResponseEntity.created(URI.create("inventories/" + id
+        + "/items/" + newItemId))
+                .build();
     }
 
     @PutMapping("/inventories/{id}/items/{itemid}")

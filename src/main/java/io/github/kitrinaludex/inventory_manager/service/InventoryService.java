@@ -22,8 +22,8 @@ public class InventoryService {
         return inventoryItemRepository.getInventoryContent(id);
     }
 
-    public void createItem(long id, Item item) {
-        inventoryItemRepository.createItem(id, item);
+    public long createItem(long id, Item item) {
+        return inventoryItemRepository.createItem(id, item);
     }
 
     public void updateItem(long id, Item item) {
@@ -35,8 +35,8 @@ public class InventoryService {
     }
 
 
-    public void createInventory(String name,long userId) {
-        inventoryRepository.createInventory(name,userId);
+    public long createInventory(String name,long userId) {
+        return inventoryRepository.createInventory(name,userId);
 
     }
 
