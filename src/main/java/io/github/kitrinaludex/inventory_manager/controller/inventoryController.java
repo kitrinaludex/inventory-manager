@@ -51,7 +51,7 @@ public class inventoryController {
         String username = SecurityContextHolder
                 .getContext()
                 .getAuthentication().getName();
-        return "Your name is +" + username;
+        return "Your name is " + username;
     }
 
 
@@ -63,7 +63,11 @@ public class inventoryController {
 
     @PostMapping("/inventory")
     public ResponseEntity<Void> createInventory(@RequestBody Inventory inventory) {
-    inventoryService.createInventory(inventory.getName(),inventory.getUserId());
+        SecurityUser user = (SecurityUser) SecurityContextHolder
+                .getContext()
+                .getAuthentication().getPrincipal();
+
+        inventoryService.createInventory(inventory.getName(),user.getId());
         return ResponseEntity.noContent().build();
     }
 
