@@ -3,6 +3,7 @@ package io.github.kitrinaludex.inventory_manager.controller;
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.Item;
 import io.github.kitrinaludex.inventory_manager.model.User;
+import io.github.kitrinaludex.inventory_manager.security.SecurityUser;
 import io.github.kitrinaludex.inventory_manager.service.InventoryService;
 import io.github.kitrinaludex.inventory_manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +55,17 @@ public class inventoryController {
      }
 
     @GetMapping("/inventory/{id}")
-    public ResponseEntity<List<Item>> getItems(@PathVariable long id) {
-        return ResponseEntity.ok(inventoryService.allItems(id));
+    public ResponseEntity<?> getItems(@PathVariable long id) {
+        return ResponseEntity.ok(inventoryService.getInventory(id));
+    }
+
+    @GetMapping("/inventories")
+    public ResponseEntity<?> getInventoryList() {
+        SecurityUser user = (SecurityUser) SecurityContextHolder
+                .getContext()
+                .getAuthentication().getPrincipal();
+    
+        return ResponseEntity.ok(inventoryService.getInventoryList(user.getId()));
     }
 
     @PostMapping("/inventory/{id}")

@@ -1,6 +1,7 @@
 package io.github.kitrinaludex.inventory_manager.repository;
 
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
+import io.github.kitrinaludex.inventory_manager.model.InventorySummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -12,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class InventoryRepository {
@@ -45,5 +48,16 @@ public class InventoryRepository {
         inventory.setItems(jdbcTemplate.query("SELECT * FROM items WHERE inventory_id = ?",
                 new ItemMapper(),id));
         return inventory;
+    }
+
+    public List<InventorySummary> getInventoryList(long id) {
+        String sql = "SELECT * FROM inventories WHERE user_id = ?";
+        return jdbcTemplate.query(sql,(rs,rowNum) -> new InventorySummary(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getLong("user_id")
+        )
+        ,id);
+
     }
 }
