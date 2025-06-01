@@ -17,9 +17,6 @@ import java.util.List;
 @RestController
 public class inventoryController {
 
-    private final InventoryService inventoryService;
-    private final UserService userService;
-
     @Autowired
     public inventoryController(InventoryService inventoryService,UserService userService) {
         this.inventoryService = inventoryService;
@@ -27,32 +24,13 @@ public class inventoryController {
     }
 
 
+    private final InventoryService inventoryService;
+    private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user){
-        userService.addUser(user);
-        return ResponseEntity.ok("cool");
-    }
-
-    @GetMapping("/loggedin")
-    public String loggedin() {
-        String userName = SecurityContextHolder
-                .getContext()
-                .getAuthentication().getName();
-        return userName + "is logged in";
-    }
-
-
-
-    @PostMapping("/inventory")
-    public ResponseEntity<Void> createInventory(@RequestBody Inventory inventory) {
-    inventoryService.createInventory(inventory.getName(),inventory.getUserId());
-        return ResponseEntity.noContent().build();
-    }
-     @GetMapping("/user/{id}")
-     public ResponseEntity<User> getUser(@PathVariable long id) {
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUser(@PathVariable long id) {
         return ResponseEntity.ok(userService.getUser(id));
-     }
+    }
 
     @GetMapping("/inventory/{id}")
     public ResponseEntity<?> getItems(@PathVariable long id) {
@@ -64,8 +42,29 @@ public class inventoryController {
         SecurityUser user = (SecurityUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication().getPrincipal();
-    
+
         return ResponseEntity.ok(inventoryService.getInventoryList(user.getId()));
+    }
+
+    @GetMapping("/whoami")
+    public String whoami() {
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication().getName();
+        return "Your name is +" + username;
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody User user){
+        userService.addUser(user);
+        return ResponseEntity.ok("cool");
+    }
+
+    @PostMapping("/inventory")
+    public ResponseEntity<Void> createInventory(@RequestBody Inventory inventory) {
+    inventoryService.createInventory(inventory.getName(),inventory.getUserId());
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/inventory/{id}")
