@@ -1,5 +1,6 @@
 package io.github.kitrinaludex.inventory_manager.controller;
 
+import io.github.kitrinaludex.inventory_manager.exceptions.InventoryAccessDeniedException;
 import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.Item;
 import io.github.kitrinaludex.inventory_manager.model.User;
@@ -33,16 +34,9 @@ public class inventoryController {
     private final AuthService authService;
 
     @GetMapping("/inventories/{id}")
-    public ResponseEntity<?> getItems(@PathVariable long id) {
-        if (!(inventoryService.exists(id))) {
-            return new ResponseEntity<String>("The requested inventory does not exist",
-                    HttpStatus.NOT_FOUND);
-        }
-
-        if (authService.checkInventoryAccess(id,"VIEWER")) {
-            return ResponseEntity.ok(inventoryService.getInventory(id));
-        }else
-            return new ResponseEntity<String>("Unauthorized", HttpStatus.FORBIDDEN);
+    public ResponseEntity<?> getItems(@PathVariable long id) throws InventoryAccessDeniedException {
+        authService.checkInventoryAccess(id,"VIEWER");
+        return ResponseEntity.ok(inventoryService.getInventory(id));
     }
 
     @GetMapping("/inventories")
@@ -77,49 +71,41 @@ public class inventoryController {
 
         Long newInventoryId = inventoryService.createInventory(inventory.
                 getName(),user.getId());
-
+        //give the user access to the inventory
         return ResponseEntity.created(URI.create("inventories/" + newInventoryId)).build();
     }
 
     @PostMapping("/inventories/{id}")
     public ResponseEntity<?> createEntry(@PathVariable long id,
-                                            @RequestBody Item item) {
-        if (!(inventoryService.exists(id))) {
-            return new ResponseEntity<String>("The requested inventory does not exist",
-                    HttpStatus.NOT_FOUND);
-        }
-        if (authService.checkInventoryAccess(id,"EDITOR")) {
-
-            Long newItemId = inventoryService.createItem(id, item);
-            return ResponseEntity.created(URI.create("inventories/" + id
+                                            @RequestBody Item item) throws InventoryAccessDeniedException {
+        authService.checkInventoryAccess(id,"EDITOR");
+        Long newItemId = inventoryService.createItem(id, item);
+        return ResponseEntity.created(URI.create("inventories/" + id
                             + "/items/" + newItemId))
                     .build();
-        }else
-            return new ResponseEntity<String>("You don't have the required permissions" +
-                    "for the request",HttpStatus.FORBIDDEN);
     }
 
     @PutMapping("/inventories/{id}/items/{itemid}")
     public ResponseEntity<?> updateItem(@PathVariable long id,
                                                @PathVariable long itemid,
-                                               @RequestBody Item item){
-        if (!(inventoryService.exists(id))) {
-            return new ResponseEntity<String>("The requested inventory does not exist",
-                    HttpStatus.NOT_FOUND);
-        }
+                                               @RequestBody Item item) throws InventoryAccessDeniedException {
+        authService.checkInventoryAccess(id,"EDITOR");
         inventoryService.updateItem(itemid, item);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/inventories/{id}/items/{itemid}")
-    public  ResponseEntity<?> deleteItem(@PathVariable("itemid") long id){
-        if (!(inventoryService.exists(id))) {
-            return new ResponseEntity<String>("The requested inventory does not exist",
-                    HttpStatus.NOT_FOUND);
-        }
+    public  ResponseEntity<?> deleteItem(@PathVariable("itemid") long id) throws InventoryAccessDeniedException {
+        authService.checkInventoryAccess(id,"EDITOR");
+        //check if item exists
         inventoryService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
+
+    //add Put inventory endpoint
+    //add delete inventory endpoint
+    //add get item endpoint
+    //add role asignage
 
 
 }
