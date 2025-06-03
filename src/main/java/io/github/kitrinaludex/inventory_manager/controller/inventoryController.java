@@ -27,11 +27,6 @@ public class inventoryController {
     private final InventoryService inventoryService;
     private final UserService userService;
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable long id) {
-        return ResponseEntity.ok(userService.getUser(id));
-    }
-
     @GetMapping("/inventories/{id}")
     public ResponseEntity<?> getItems(@PathVariable long id) {
         return ResponseEntity.ok(inventoryService.getInventory(id));
