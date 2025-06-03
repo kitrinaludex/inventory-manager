@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS test,users,items,inventories,inventory_authorities;
+DROP TABLE IF EXISTS test,users,items,inventories,inventory_permissions;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
@@ -16,7 +16,7 @@ id SERIAL PRIMARY KEY,
 user_id INT,
 name TEXT);
 
-CREATE TABLE inventory_authorities(
+CREATE TABLE inventory_permissions(
 user_id INT,
 inventory_id INT,
-authority_level INT);
+role TEXT);

@@ -61,4 +61,9 @@ public class InventoryRepository {
         ,id);
 
     }
+
+    public boolean exists(long inventoryId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM inventories WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, inventoryId));
+    }
 }

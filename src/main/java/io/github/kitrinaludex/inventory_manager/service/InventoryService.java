@@ -18,6 +18,10 @@ public class InventoryService {
     @Autowired
     InventoryRepository inventoryRepository;
 
+    public boolean exists(long inventoryId){
+        return inventoryRepository.exists(inventoryId);
+    }
+
     public List<Item> allItems(long id) {
         return inventoryItemRepository.getInventoryContent(id);
     }

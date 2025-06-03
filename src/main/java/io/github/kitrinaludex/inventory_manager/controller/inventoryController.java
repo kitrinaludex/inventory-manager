@@ -4,9 +4,11 @@ import io.github.kitrinaludex.inventory_manager.model.Inventory;
 import io.github.kitrinaludex.inventory_manager.model.Item;
 import io.github.kitrinaludex.inventory_manager.model.User;
 import io.github.kitrinaludex.inventory_manager.security.SecurityUser;
+import io.github.kitrinaludex.inventory_manager.service.AuthService;
 import io.github.kitrinaludex.inventory_manager.service.InventoryService;
 import io.github.kitrinaludex.inventory_manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +20,29 @@ import java.util.List;
 public class inventoryController {
 
     @Autowired
-    public inventoryController(InventoryService inventoryService,UserService userService) {
+    public inventoryController(InventoryService inventoryService,
+                               UserService userService,AuthService authService) {
         this.inventoryService = inventoryService;
         this.userService = userService;
+        this.authService = authService;
     }
 
 
     private final InventoryService inventoryService;
     private final UserService userService;
+    private final AuthService authService;
 
     @GetMapping("/inventories/{id}")
     public ResponseEntity<?> getItems(@PathVariable long id) {
-        return ResponseEntity.ok(inventoryService.getInventory(id));
+        if (!(inventoryService.exists(id))) {
+            return new ResponseEntity<String>("The requested inventory does not exist",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if (authService.checkInventoryAccess(id,"VIEWER")) {
+            return ResponseEntity.ok(inventoryService.getInventory(id));
+        }else
+            return new ResponseEntity<String>("Unauthorized", HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("/inventories")
@@ -69,25 +82,41 @@ public class inventoryController {
     }
 
     @PostMapping("/inventories/{id}")
-    public ResponseEntity<Long> createEntry(@PathVariable long id,
+    public ResponseEntity<?> createEntry(@PathVariable long id,
                                             @RequestBody Item item) {
+        if (!(inventoryService.exists(id))) {
+            return new ResponseEntity<String>("The requested inventory does not exist",
+                    HttpStatus.NOT_FOUND);
+        }
+        if (authService.checkInventoryAccess(id,"EDITOR")) {
 
-        Long newItemId = inventoryService.createItem(id, item);
-        return ResponseEntity.created(URI.create("inventories/" + id
-        + "/items/" + newItemId))
-                .build();
+            Long newItemId = inventoryService.createItem(id, item);
+            return ResponseEntity.created(URI.create("inventories/" + id
+                            + "/items/" + newItemId))
+                    .build();
+        }else
+            return new ResponseEntity<String>("You don't have the required permissions" +
+                    "for the request",HttpStatus.FORBIDDEN);
     }
 
     @PutMapping("/inventories/{id}/items/{itemid}")
-    public ResponseEntity<Void> updateItem(@PathVariable long id,
+    public ResponseEntity<?> updateItem(@PathVariable long id,
                                                @PathVariable long itemid,
                                                @RequestBody Item item){
+        if (!(inventoryService.exists(id))) {
+            return new ResponseEntity<String>("The requested inventory does not exist",
+                    HttpStatus.NOT_FOUND);
+        }
         inventoryService.updateItem(itemid, item);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/inventories/{id}/items/{itemid}")
-    public  ResponseEntity<Void> deleteItem(@PathVariable("itemid") long id){
+    public  ResponseEntity<?> deleteItem(@PathVariable("itemid") long id){
+        if (!(inventoryService.exists(id))) {
+            return new ResponseEntity<String>("The requested inventory does not exist",
+                    HttpStatus.NOT_FOUND);
+        }
         inventoryService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
