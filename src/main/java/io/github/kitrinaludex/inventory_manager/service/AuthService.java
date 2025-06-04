@@ -30,6 +30,6 @@ public class AuthService {
         if (permissionRepository.hasPermission(userId,inventoryId,requiredRole)) {
             return;
         }else throw new InventoryAccessDeniedException("You dont have the requried permissions for" +
-                "this action");
+                " this action");
     }
 }
