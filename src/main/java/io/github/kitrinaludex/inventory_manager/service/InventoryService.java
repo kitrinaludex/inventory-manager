@@ -51,4 +51,16 @@ public class InventoryService {
     public List<InventorySummary> getInventoryList(long id) {
         return inventoryRepository.getInventoryList(id);
     }
+
+    public void updateInventory(long id, Inventory inventory) {
+        inventoryRepository.updateInventory(id,inventory);
+    }
+
+    public void deleteInventory(long id) {
+        inventoryRepository.deleteInventory(id);
+    }
+
+    public Item getItem(long itemId) {
+    return inventoryItemRepository.getItemById(itemId);
+    }
 }

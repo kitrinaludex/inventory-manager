@@ -47,6 +47,13 @@ public class inventoryController {
 
         return ResponseEntity.ok(inventoryService.getInventoryList(user.getId()));
     }
+    @GetMapping("/inventories/{id}/items/{itemId}")
+    public ResponseEntity<?> getItem(@PathVariable long id,
+                                     @PathVariable long itemId) throws InventoryAccessDeniedException {
+        authService.checkInventoryAccess(id,"VIEWER");
+        return ResponseEntity.ok(inventoryService.getItem(itemId));
+        //FIXME:returns any item, not just the ones in the inventory
+    }
 
     @GetMapping("/whoami")
     public String whoami() {
@@ -85,6 +92,14 @@ public class inventoryController {
                     .build();
     }
 
+    @PutMapping("/inventories/{id}")ResponseEntity<?>updateInventory(
+            @PathVariable long id,
+            @RequestBody Inventory inventory) throws InventoryAccessDeniedException {
+        authService.checkInventoryAccess(id,"EDITOR");
+        inventoryService.updateInventory(id,inventory);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("/inventories/{id}/items/{itemid}")
     public ResponseEntity<?> updateItem(@PathVariable long id,
                                                @PathVariable long itemid,
@@ -94,16 +109,21 @@ public class inventoryController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/inventories/{id}")
+    public ResponseEntity<?> deleteInventory(@PathVariable long id) throws InventoryAccessDeniedException {
+        authService.checkInventoryAccess(id,"OWNER");
+        inventoryService.deleteInventory(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/inventories/{id}/items/{itemid}")
     public  ResponseEntity<?> deleteItem(@PathVariable("itemid") long id) throws InventoryAccessDeniedException {
         authService.checkInventoryAccess(id,"EDITOR");
-        //check if item exists
         inventoryService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
 
-    //add Put inventory endpoint
-    //add delete inventory endpoint
+
     //add get item endpoint
     //add role asignage
 

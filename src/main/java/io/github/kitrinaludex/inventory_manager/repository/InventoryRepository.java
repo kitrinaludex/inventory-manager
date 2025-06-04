@@ -66,4 +66,15 @@ public class InventoryRepository {
         String sql = "SELECT EXISTS(SELECT 1 FROM inventories WHERE id = ?)";
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, inventoryId));
     }
+
+    public void updateInventory(long id, Inventory inventory) {
+        String sql = "UPDATE inventories SET name = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql,inventory.getName());
+    }
+
+    public void deleteInventory(long id) {
+        String sql = "DELETE FROM inventories WHERE id = ?";
+        jdbcTemplate.update(sql,id);
+    }
 }
